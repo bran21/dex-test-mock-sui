@@ -1,0 +1,34 @@
+Starting deployment...
+Deploying Move Dex...
+Deleted Published.toml
+Publishing package...
+Running: sui client publish --gas-budget 200000000 --json "C:\Users\Slimbook 14 R5\dextest\move_dex"
+Package Published: 0x9e88cb944c5e7c7ab0c4d3cf2e813d9126080c7e959ea031120dfaabb5f9924d
+Treasury Cap found: 0x76c5a1097fc266b913b54cf62c2ea975a807c0f8f458a0145474298593dc8b04
+Running: sui client active-address --json
+Active Address: 0x2e1666ae83f393acc2db2ff53255f09a1ebe30a1d8036a9da5d3b5abdb7cbbb0
+Minting Faucet Coin...
+Running: sui client call --package 0x9e88cb944c5e7c7ab0c4d3cf2e813d9126080c7e959ea031120dfaabb5f9924d --module faucet_coin --function mint --args 0x76c5a1097fc266b913b54cf62c2ea975a807c0f8f458a0145474298593dc8b04 1000000000 0x2e1666ae83f393acc2db2ff53255f09a1ebe30a1d8036a9da5d3b5abdb7cbbb0 --gas-budget 200000000 --json
+Minted Coin: 0xb841b04dbe798ae074fddd42348504cd45e5c2b54f7cfcdbbad76e0b1e318195
+Running: sui client gas --json
+Gas Coins Raw: [{"gasCoinId":"0x495b3c1c9e45b9672887b6755b6e6485175b0252e3b4df5bbb06b240e81abd6e","mistBalance":939182704,"suiBalance":"0.93"},{"gasCoinId":"0x6820836b89c37d39c3a473f132dd759eab519abd5322541f0c029468fac3b8d2","mistBalance":208794984,"suiBalance":"0.20"}]
+Primary coin too small. Merging coins...
+Merging 1 coins...
+Running: sui client merge-coin --primary-coin 0x495b3c1c9e45b9672887b6755b6e6485175b0252e3b4df5bbb06b240e81abd6e --coin-to-merge 0x6820836b89c37d39c3a473f132dd759eab519abd5322541f0c029468fac3b8d2 --gas-budget 50000000 --json
+Command failed: sui client merge-coin --primary-coin 0x495b3c1c9e45b9672887b6755b6e6485175b0252e3b4df5bbb06b240e81abd6e --coin-to-merge 0x6820836b89c37d39c3a473f132dd759eab519abd5322541f0c029468fac3b8d2 --gas-budget 50000000 --json
+Stderr: [warning] Client/Server api version mismatch, client api version : 1.63.2, server api version : 1.65.2
+
+Stdout: Cannot find gas coin for signer address 0x2e1666ae83f393acc2db2ff53255f09a1ebe30a1d8036a9da5d3b5abdb7cbbb0 with amount sufficient for the required gas budget 50000000. If you are using the pay or transfer commands, you can use pay-sui or transfer-sui commands instead, which will use the only object as gas payment.
+
+FATAL ERROR: Command failed: sui client merge-coin --primary-coin 0x495b3c1c9e45b9672887b6755b6e6485175b0252e3b4df5bbb06b240e81abd6e --coin-to-merge 0x6820836b89c37d39c3a473f132dd759eab519abd5322541f0c029468fac3b8d2 --gas-budget 50000000 --json
+[warning] Client/Server api version mismatch, client api version : 1.63.2, server api version : 1.65.2
+
+Error: Command failed: sui client merge-coin --primary-coin 0x495b3c1c9e45b9672887b6755b6e6485175b0252e3b4df5bbb06b240e81abd6e --coin-to-merge 0x6820836b89c37d39c3a473f132dd759eab519abd5322541f0c029468fac3b8d2 --gas-budget 50000000 --json
+[warning] Client/Server api version mismatch, client api version : 1.63.2, server api version : 1.65.2
+
+    at genericNodeError (node:internal/errors:985:15)
+    at wrappedFn (node:internal/errors:539:14)
+    at checkExecSyncError (node:child_process:925:11)
+    at execSync (node:child_process:997:15)
+    at runCommand (C:\Users\Slimbook 14 R5\dextest\frontend\scripts\deploy.js:21:24)
+    at main (C:\Users\Slimbook 14 R5\dextest\frontend\scripts\deploy.js:144:13)

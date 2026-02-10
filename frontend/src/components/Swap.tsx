@@ -6,7 +6,7 @@ import { useSuiClient } from "@mysten/dapp-kit";
 import { Transaction } from "@mysten/sui/transactions";
 import { ArrowDown, Settings, Info } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { PACKAGE_ID, MODULE_NAME, SUI_TYPE, CUSTOM_TOKEN_TYPE, POOL_ID } from "../config";
+import { PACKAGE_ID, MODULE_NAME, SUI_TYPE, CUSTOM_TOKEN_TYPE, POOL_ID, SUI_DECIMALS, CUSTOM_TOKEN_DECIMALS } from "../config";
 
 export function Swap() {
     const { connected, account, signAndExecuteTransaction } = useWallet();
@@ -28,8 +28,8 @@ export function Swap() {
                 client.getBalance({ owner: account.address, coinType: SUI_TYPE }),
                 client.getBalance({ owner: account.address, coinType: CUSTOM_TOKEN_TYPE }),
             ]);
-            setSuiBalance((Number(sui.totalBalance) / 1e9).toFixed(3));
-            setCustomBalance((Number(custom.totalBalance) / 1e9).toFixed(3));
+            setSuiBalance((Number(sui.totalBalance) / Math.pow(10, SUI_DECIMALS)).toFixed(3));
+            setCustomBalance((Number(custom.totalBalance) / Math.pow(10, CUSTOM_TOKEN_DECIMALS)).toFixed(3));
         } catch (error) {
             console.error("Error fetching balances:", error);
         }
@@ -47,8 +47,8 @@ export function Swap() {
                 const fields = poolObject.data.content.fields as any;
                 const reserveA = fields.coin_a || "0";
                 const reserveB = fields.coin_b || "0";
-                setPoolReserveA((Number(reserveA) / 1e9).toFixed(3));
-                setPoolReserveB((Number(reserveB) / 1e9).toFixed(3));
+                setPoolReserveA((Number(reserveA) / Math.pow(10, SUI_DECIMALS)).toFixed(3));
+                setPoolReserveB((Number(reserveB) / Math.pow(10, CUSTOM_TOKEN_DECIMALS)).toFixed(3));
                 console.log("Pool Reserves - SUI:", reserveA, "CUSTOM:", reserveB);
             }
         } catch (error) {
@@ -86,7 +86,8 @@ export function Swap() {
             const tx = new Transaction();
             tx.setSender(account.address);
 
-            const amount = BigInt(Math.floor(parseFloat(fromAmount) * 1e9));
+            const decimals = !isFlipped ? SUI_DECIMALS : CUSTOM_TOKEN_DECIMALS;
+            const amount = BigInt(Math.floor(parseFloat(fromAmount) * Math.pow(10, decimals)));
 
             if (amount <= 0) {
                 throw new Error("Amount must be greater than 0");

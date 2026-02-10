@@ -5,7 +5,7 @@ import { useWallet, ConnectButton } from "@suiet/wallet-kit";
 import { useSuiClient } from "@mysten/dapp-kit";
 import { Transaction } from "@mysten/sui/transactions";
 import { Plus, Settings, Info, Droplets } from "lucide-react";
-import { PACKAGE_ID, MODULE_NAME, SUI_TYPE, CUSTOM_TOKEN_TYPE, POOL_ID } from "../config";
+import { PACKAGE_ID, MODULE_NAME, SUI_TYPE, CUSTOM_TOKEN_TYPE, POOL_ID, SUI_DECIMALS, CUSTOM_TOKEN_DECIMALS } from "../config";
 
 export function Liquidity() {
     const { connected, account, signAndExecuteTransaction } = useWallet();
@@ -22,8 +22,8 @@ export function Liquidity() {
             setIsCreating(true);
             const tx = new Transaction();
 
-            const amtA = BigInt(Math.floor(parseFloat(amountA) * 1e9));
-            const amtB = BigInt(Math.floor(parseFloat(amountB) * 1e9));
+            const amtA = BigInt(Math.floor(parseFloat(amountA) * Math.pow(10, SUI_DECIMALS)));
+            const amtB = BigInt(Math.floor(parseFloat(amountB) * Math.pow(10, CUSTOM_TOKEN_DECIMALS)));
 
             // Split SUI for amount A
             const [coinA] = tx.splitCoins(tx.gas, [amtA]);
@@ -71,8 +71,8 @@ export function Liquidity() {
             setIsAdding(true);
             const tx = new Transaction();
 
-            const amtA = BigInt(Math.floor(parseFloat(amountA) * 1e9));
-            const amtB = BigInt(Math.floor(parseFloat(amountB) * 1e9));
+            const amtA = BigInt(Math.floor(parseFloat(amountA) * Math.pow(10, SUI_DECIMALS)));
+            const amtB = BigInt(Math.floor(parseFloat(amountB) * Math.pow(10, CUSTOM_TOKEN_DECIMALS)));
 
             // Split SUI for amount A
             const [coinA] = tx.splitCoins(tx.gas, [amtA]);

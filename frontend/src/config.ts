@@ -6,4 +6,7 @@ export const CUSTOM_TOKEN_TYPE = "0x1739953b042e122df0ca3811c2983d94a7d442f28514
 
 // Pool ID will need to be updated after first pool creation or found via indexing
 // For now, we'll placeholder it or implement a way to pass it.
-export const POOL_ID = "0x24984178a57f87e8f3b735c5d79caace3ab2245d47023b22899908356a31819e"; // Pool object ID
+export const POOL_ID = "0x856f4e695769ee6ab3e7d35efca768741c381925d72ae263f68ed01881a862c8"; // Pool object ID
+
+export const SUI_DECIMALS = 9;
+export const CUSTOM_TOKEN_DECIMALS = 6;
