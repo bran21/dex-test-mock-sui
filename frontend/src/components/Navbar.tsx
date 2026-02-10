@@ -2,8 +2,19 @@
 
 import { ConnectButton } from "@suiet/wallet-kit";
 import { Layers } from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
 
 export function Navbar() {
+    const pathname = usePathname();
+
+    const navItems = [
+        { name: "Swap", href: "/swap" },
+        { name: "Pool", href: "/pool" },
+        { name: "Stake", href: "#" },
+    ];
+
     return (
         <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-8 py-4 bg-white/40 backdrop-blur-xl border-b border-black/5 shadow-sm">
             <div className="flex items-center gap-2">
@@ -16,10 +27,21 @@ export function Navbar() {
             </div>
 
             <div className="flex items-center gap-8">
-                <div className="hidden md:flex items-center gap-8 text-sm font-semibold text-zinc-600">
-                    <a href="#" className="hover:text-zinc-900 transition-colors">Swap</a>
-                    <a href="#" className="hover:text-zinc-900 transition-colors">Pools</a>
-                    <a href="#" className="hover:text-zinc-900 transition-colors">Stake</a>
+                <div className="hidden md:flex items-center gap-8 text-sm font-semibold">
+                    {navItems.map((item) => (
+                        <Link
+                            key={item.name}
+                            href={item.href}
+                            className={cn(
+                                "transition-colors",
+                                pathname === item.href
+                                    ? "text-zinc-900"
+                                    : "text-zinc-500 hover:text-zinc-900"
+                            )}
+                        >
+                            {item.name}
+                        </Link>
+                    ))}
                 </div>
 
                 <ConnectButton className="!bg-white !text-zinc-900 !rounded-full !px-6 !py-2.5 !font-bold hover:!bg-zinc-50 active:!scale-95 transition-all shadow-xl shadow-black/10 border border-black/5" />

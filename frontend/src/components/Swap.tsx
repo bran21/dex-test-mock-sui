@@ -6,9 +6,9 @@ import { useSuiClient } from "@mysten/dapp-kit";
 import { Transaction } from "@mysten/sui/transactions";
 import { ArrowDown, Settings, Info } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { PACKAGE_ID, MODULE_NAME, SUI_TYPE, CUSTOM_TOKEN_TYPE, POOL_ID, SUI_DECIMALS, CUSTOM_TOKEN_DECIMALS } from "../config";
+import { PACKAGE_ID, MODULE_NAME, SUI_TYPE, CUSTOM_TOKEN_TYPE, SUI_DECIMALS, CUSTOM_TOKEN_DECIMALS } from "../config";
 
-export function Swap() {
+export function Swap({ poolId }: { poolId: string }) {
     const { connected, account, signAndExecuteTransaction } = useWallet();
     const client = useSuiClient();
     const [fromAmount, setFromAmount] = useState("");
@@ -36,10 +36,10 @@ export function Swap() {
     }, [account?.address, client]);
 
     const fetchPoolReserves = useCallback(async () => {
-        if (!POOL_ID) return;
+        if (!poolId) return;
         try {
             const poolObject = await client.getObject({
-                id: POOL_ID,
+                id: poolId,
                 options: { showContent: true },
             });
 
@@ -54,7 +54,7 @@ export function Swap() {
         } catch (error) {
             console.error("Error fetching pool reserves:", error);
         }
-    }, [client]);
+    }, [client, poolId]);
 
     useEffect(() => {
         fetchBalances();
@@ -73,7 +73,7 @@ export function Swap() {
     };
 
     const handleSwap = async () => {
-        if (!connected || !fromAmount || !POOL_ID || !account) return;
+        if (!connected || !fromAmount || !poolId || !account) return;
 
         try {
             setIsSwapping(true);
@@ -104,7 +104,7 @@ export function Swap() {
                 tx.moveCall({
                     target: `${PACKAGE_ID}::${MODULE_NAME}::swap_a_to_b`,
                     typeArguments: [SUI_TYPE, CUSTOM_TOKEN_TYPE],
-                    arguments: [tx.object(POOL_ID), coin],
+                    arguments: [tx.object(poolId), coin],
                 });
             } else {
                 // CUSTOM -> SUI (swap_b_to_a)
@@ -134,7 +134,7 @@ export function Swap() {
                 tx.moveCall({
                     target: `${PACKAGE_ID}::${MODULE_NAME}::swap_b_to_a`,
                     typeArguments: [SUI_TYPE, CUSTOM_TOKEN_TYPE],
-                    arguments: [tx.object(POOL_ID), coin],
+                    arguments: [tx.object(poolId), coin],
                 });
             }
 

@@ -1,0 +1,11 @@
+{
+    "version": 2,
+    "framework": "nextjs",
+    "redirects": [
+        {
+            "source": "/",
+            "destination": "/swap",
+            "permanent": false
+        }
+    ]
+}

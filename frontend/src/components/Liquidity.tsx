@@ -7,7 +7,7 @@ import { Transaction } from "@mysten/sui/transactions";
 import { Plus, Settings, Info, Droplets } from "lucide-react";
 import { PACKAGE_ID, MODULE_NAME, SUI_TYPE, CUSTOM_TOKEN_TYPE, POOL_ID, SUI_DECIMALS, CUSTOM_TOKEN_DECIMALS } from "../config";
 
-export function Liquidity() {
+export function Liquidity({ onPoolCreated }: { onPoolCreated: (poolId: string) => void }) {
     const { connected, account, signAndExecuteTransaction } = useWallet();
     const client = useSuiClient();
     const [amountA, setAmountA] = useState("");
@@ -51,11 +51,41 @@ export function Liquidity() {
                 arguments: [coinA, coinB],
             });
 
-            const res = await signAndExecuteTransaction({
+            const { digest } = await signAndExecuteTransaction({
                 transaction: tx,
             });
-            console.log("Pool created:", res);
-            alert("Pool created successfully! Please find the Pool ID in the transaction results and update config.ts");
+            console.log("Pool creation submitted. Digest:", digest);
+
+            const res = await client.waitForTransaction({
+                digest,
+                options: {
+                    showObjectChanges: true,
+                    showEffects: true,
+                }
+            });
+            console.log("Pool created verified:", res);
+
+            // Allow time for the callback
+            let poolIdFound = false;
+
+            if (res.objectChanges) {
+                const createdObject = res.objectChanges.find(
+                    (change: any) => change.type === "created" && change.objectType.includes(MODULE_NAME) && change.objectType.includes("Pool")
+                );
+
+                if (createdObject && "objectId" in createdObject) {
+                    const newPoolId = createdObject.objectId;
+                    console.log("Found new Pool ID:", newPoolId);
+                    alert("Pool created successfully! Switching to swap...");
+                    onPoolCreated(newPoolId);
+                    poolIdFound = true;
+                }
+            }
+
+            if (!poolIdFound) {
+                alert("Pool created, but could not auto-detect ID. Check console.");
+            }
+
         } catch (error) {
             console.error("Failed to create pool:", error);
             alert("Failed to create pool: " + (error as Error).message);
